@@ -1,0 +1,6 @@
+import{c,j as e,P as n,B as r}from"./index-DWGnUDIn.js";import{S as i}from"./search-D5BqFGBV.js";/**
+ * @license lucide-react v0.468.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const m=c("Inbox",[["polyline",{points:"22 12 16 12 14 15 10 15 8 12 2 12",key:"o97t9d"}],["path",{d:"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z",key:"oot6mr"}]]),o={default:e.jsx(m,{size:48,className:"text-slate-600"}),search:e.jsx(i,{size:48,className:"text-slate-600"}),subject:e.jsx(r,{size:48,className:"text-slate-600"})};function j({icon:t,title:a,description:l,action:s,variant:x="default"}){return e.jsxs("div",{className:"flex flex-col items-center justify-center py-16 px-4 text-center",children:[e.jsx("div",{className:"w-20 h-20 rounded-2xl bg-slate-800/50 flex items-center justify-center mb-4",children:t||o[x]}),e.jsx("h3",{className:"text-lg font-semibold text-slate-300 mb-2",children:a}),e.jsx("p",{className:"text-sm text-slate-500 max-w-xs leading-relaxed mb-6",children:l}),s&&e.jsxs("button",{onClick:s.onClick,className:"btn-primary flex items-center gap-2 px-6 py-3",children:[s.icon||e.jsx(n,{size:18}),s.label]})]})}export{j as E};

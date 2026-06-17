@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="./icon-192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="description" content="SmartMistake 智能错题本 - 基于 AI 的跨平台错题管理应用，拍照识别、智能分析、举一反三，帮你高效提分。" />
+    <meta name="keywords" content="错题本,错题管理,学习工具,拍照搜题,AI讲解,艾宾浩斯,复习提醒" />
+    <meta name="author" content="SmartMistake" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="错题本" />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="SmartMistake - 智能错题本" />
+    <meta property="og:description" content="基于 AI 的跨平台错题管理应用，拍照识别、智能讲解、举一反三，帮你高效提分。" />
+    <meta property="og:image" content="./icon-512.png" />
+    <meta property="og:url" content="https://alexchu871210.github.io/smartmistake-app/" />
+    
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="SmartMistake - 智能错题本" />
+    <meta name="twitter:description" content="基于 AI 的跨平台错题管理应用，拍照识别、智能讲解、举一反三。" />
+    <meta name="twitter:image" content="./icon-512.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./icon-192.png" />
+    <title>SmartMistake - 智能错题本</title>
+    <script type="module" crossorigin src="./assets/index-DWGnUDIn.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/charts-C1EvV752.js">
+    <link rel="modulepreload" crossorigin href="./assets/pdf-DlBFes3l.js">
+    <link rel="modulepreload" crossorigin href="./assets/supabase-IXkdJ51F.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-_9lsJM16.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    
+    <div id="loading-fallback" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0f172a;color:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;font-family:system-ui,sans-serif;z-index:9999;transition:opacity 0.5s;">
+      <div style="width:40px;height:40px;border:3px solid #1e293b;border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite;"></div>
+      <p style="margin:0;color:#94a3b8;font-size:14px;">正在加载 SmartMistake...</p>
+      <p id="loading-status" style="margin:0;color:#64748b;font-size:12px;max-width:280px;text-align:center;"></p>
+      <button id="reload-btn" onclick="location.reload(true)" style="display:none;margin-top:8px;padding:8px 16px;border:1px solid #334155;border-radius:8px;background:#1e293b;color:#fff;font-size:13px;cursor:pointer;">刷新页面</button>
+    </div>
+    <style>@keyframes spin{to{transform:rotate(360deg);}}</style>
+    
+    <script>
+      (function() {
+        const APP_VERSION = 'v0.2.3';
+        const savedVersion = localStorage.getItem('sw-version');
+        let hasError = false;
+        let errorCount = 0;
+        const loadingStatus = document.getElementById('loading-status');
+        const reloadBtn = document.getElementById('reload-btn');
+        
+        function setStatus(msg) {
+          if (loadingStatus) loadingStatus.textContent = msg;
+          console.log('[SmartMistake]', msg);
+        }
+        
+        if (savedVersion && savedVersion !== APP_VERSION) {
+          setStatus('检测到新版本，正在更新...');
+          localStorage.setItem('sw-version', APP_VERSION);
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(function(regs) {
+              regs.forEach(function(reg) { reg.unregister(); });
+            });
+          }
+          if ('caches' in window) {
+            caches.keys().then(function(names) {
+              return Promise.all(names.map(function(n) { return caches.delete(n); }));
+            }).then(function() {
+              window.location.reload(true);
+            }).catch(function() {
+              window.location.reload(true);
+            });
+          } else {
+            window.location.reload(true);
+          }
+          return;
+        }
+        
+        if (!savedVersion) {
+          localStorage.setItem('sw-version', APP_VERSION);
+        }
+        
+        window.addEventListener('error', function(e) {
+          if (e.target && (e.target.tagName === 'SCRIPT' || e.target.tagName === 'LINK')) {
+            errorCount++;
+            hasError = true;
+            setStatus('资源加载失败 (' + errorCount + '): ' + (e.target.src || e.target.href || 'unknown'));
+            if (reloadBtn) reloadBtn.style.display = 'block';
+            if (errorCount === 1) {
+              setTimeout(function() {
+                localStorage.removeItem('sw-version');
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    return Promise.all(names.map(function(n) { return caches.delete(n); }));
+                  }).then(function() {
+                    window.location.reload(true);
+                  }).catch(function() {
+                    window.location.reload(true);
+                  });
+                } else {
+                  window.location.reload(true);
+                }
+              }, 1000);
+            }
+          }
+        }, true);
+        
+        window.addEventListener('error', function(e) {
+          if (!e.target || (e.target.tagName !== 'SCRIPT' && e.target.tagName !== 'LINK')) {
+            console.error('JS错误:', e.message, e.filename, e.lineno);
+            setStatus('脚本错误: ' + e.message);
+            if (reloadBtn) reloadBtn.style.display = 'block';
+          }
+        });
+        
+        setTimeout(function() {
+          var root = document.getElementById('root');
+          if (root && root.children.length === 0 && !hasError) {
+            setStatus('加载超时，请检查网络连接或点击刷新');
+            if (reloadBtn) reloadBtn.style.display = 'block';
+          }
+        }, 10000);
+        
+        function hideLoading() {
+          var fallback = document.getElementById('loading-fallback');
+          if (fallback) {
+            fallback.style.opacity = '0';
+            setTimeout(function() { fallback.style.display = 'none'; }, 500);
+          }
+        }
+        
+        var checkInterval = setInterval(function() {
+          var root = document.getElementById('root');
+          if (root && root.children.length > 0) {
+            clearInterval(checkInterval);
+            hideLoading();
+          }
+        }, 100);
+        
+        setTimeout(function() {
+          clearInterval(checkInterval);
+        }, 30000);
+        
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'APP_UPDATED') {
+              var newVersion = event.data.version;
+              if (newVersion && newVersion !== APP_VERSION) {
+                localStorage.setItem('sw-version', newVersion);
+                window.location.reload(true);
+              }
+            }
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

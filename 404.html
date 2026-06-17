@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SmartMistake - 智能错题本</title>
+  <script>
+    // GitHub Pages SPA 404 重定向
+    // 当用户直接访问子路由或刷新时，GitHub Pages 会返回 404
+    // 此脚本将路径重定向到 index.html，由前端路由处理
+    
+    // 获取当前路径
+    const path = window.location.pathname;
+    const repo = '/smartmistake-app';
+    
+    // 如果路径以仓库名开头，提取子路径
+    if (path.startsWith(repo)) {
+      const subPath = path.slice(repo.length);
+      // 保存子路径到 sessionStorage，App.tsx 启动时读取
+      sessionStorage.setItem('redirect_path', subPath + window.location.search + window.location.hash);
+    }
+    
+    // 重定向到首页
+    window.location.replace(repo + '/');
+  </script>
+</head>
+<body>
+  <p>正在重定向...</p>
+</body>
+</html>

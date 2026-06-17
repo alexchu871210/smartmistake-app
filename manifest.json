@@ -1,0 +1,22 @@
+{
+  "name": "SmartMistake - 智能错题本",
+  "short_name": "SmartMistake",
+  "description": "基于 AI 的跨平台错题管理应用，拍照识别、智能分析、举一反三",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
